@@ -7,12 +7,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+enum Role {
+  admin
+  user
+}
 
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  email     String   @unique
-  age       Int    @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String    @unique
+  password      String
+  role          Role      @default(user)
+  profilePhoto  String?   
+  bio           String?   
+  dateOfBirth   String?   
+  phone         String?   
+  tasks         Task[]    
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Task {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  status      String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  priority    String    @default("MEDIUM")  // LOW, MEDIUM, HIGH
+  dueDate     String?
+  
+
+  userId      String    @db.ObjectId
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }

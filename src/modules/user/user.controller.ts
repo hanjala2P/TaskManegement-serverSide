@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { UserService } from "./user.service";
-import catchAsync from "../../utlis/catchAsync"; 
+import catchAsync from "../../utlis/catchAsync";
 import sendResponse from "../../utlis/sendResponse";
 
-// 1. Create User
+// 1. Create User Controller
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.createUserIntoDB(req.body);
 
@@ -15,7 +15,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// 2. Get All Users
+// 2. Get All Users Controller
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.getAllUsersFromDB();
 
@@ -27,10 +27,10 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// 3. Get Single User
+// 3. Get Single User Controller
 const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await UserService.getSingleUserFromDB(id as string);
+  const result = await UserService.getSingleUserFromDB(id);
 
   sendResponse(res, {
     statusCode: 200,
@@ -40,29 +40,42 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// 4. Update User
+// 4. Update User Controller
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await UserService.updateUserInDB(id as string, req.body);
+  const result = await UserService.updateUserInDB(id, req.body);
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "User updated successfully!",
+    message: "User updated successfully! 📝",
     data: result,
   });
 });
 
-// 5. Delete User
+// 5. Delete User Controller
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await UserService.deleteUserFromDB(id as string);
+  const result = await UserService.deleteUserFromDB(id);
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "User deleted successfully!",
+    message: "User deleted successfully! 🗑️",
     data: result,
+  });
+});
+const updateProfileImage = catchAsync(async (req: Request, res: Response) => {
+  if (!req.file) {
+    throw new Error("No file uploaded!");
+  }
+  const filePath = req.file.path;
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "File uploaded successfully!",
+    data: { filePath },
   });
 });
 
@@ -72,4 +85,5 @@ export const UserController = {
   getSingleUser,
   updateUser,
   deleteUser,
+  updateProfileImage
 };

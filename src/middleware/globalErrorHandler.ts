@@ -11,7 +11,6 @@ const globalErrorHandler = (
   let statusCode = 500;
   let message = error.message || "Something went wrong!";
   
- 
   let errorSources: TErrorSources[] = [
     {
       path: "",
@@ -19,7 +18,17 @@ const globalErrorHandler = (
     },
   ];
 
-  if (error instanceof AppError) {
+  // ১. Zod Validation Error হ্যান্ডেল করা
+  if (error.name === "ZodError") {
+    statusCode = 400;
+    message = "Validation Error";
+    errorSources = error.issues.map((issue: any) => ({
+      path: issue.path[issue.path.length - 1] || "",
+      message: issue.message,
+    }));
+  } 
+  // ২. Custom AppError হ্যান্ডেল করা
+  else if (error instanceof AppError) {
     statusCode = error.statusCode;
     message = error.message;
     errorSources = [
@@ -28,7 +37,9 @@ const globalErrorHandler = (
         message: error.message,
       },
     ];
-  } else if (error.code === "P2025") {
+  } 
+  // ৩. Prisma Record Not Found (P2025)
+  else if (error.code === "P2025") {
     statusCode = 404;
     message = "Requested record not found in the database!";
     errorSources = [
@@ -37,7 +48,9 @@ const globalErrorHandler = (
         message: "Requested record not found in the database!",
       },
     ];
-  } else if (error.code === "P2002") {
+  } 
+  // ৪. Prisma Unique Constraint Violation (P2002)
+  else if (error.code === "P2002") {
     statusCode = 400;
     message = "Duplicate value error! This record already exists.";
     errorSources = [
@@ -48,12 +61,13 @@ const globalErrorHandler = (
     ];
   }
 
- 
+  // ৫. ফাইনাল রেসপন্স পাঠানো
   res.status(statusCode).json({
     success: false,
     message,
     errorSources,
-    error, 
+    // প্রোডাকশনে মেইন এরর অবজেক্ট বা স্ট্যাক হাইড রাখাই ভালো
+    error: process.env.NODE_ENV === "development" ? error : undefined,
   });
 };
 
