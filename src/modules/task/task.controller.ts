@@ -17,7 +17,6 @@ const createTask = catchAsync(async (req: Request, res: Response) => {
 
 // 2. Get All Tasks (Supports Pagination, Searching & Filtering)
 const getAllTasks = catchAsync(async (req: Request, res: Response) => {
-লো
   const result = await TaskService.getAllTasksFromDB(req.query);
 
   sendResponse(res, {
@@ -25,7 +24,7 @@ const getAllTasks = catchAsync(async (req: Request, res: Response) => {
     success: true,
     message: "Tasks retrieved successfully!",
     meta: result.meta, 
-    data: result.data, // মূল টাস্কের অ্যারে
+    data: result.data, 
   });
 });
 

@@ -30,7 +30,7 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 // 3. Get Single User Controller
 const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await UserService.getSingleUserFromDB(id);
+ const result = await UserService.getSingleUserFromDB(id as string);
 
   sendResponse(res, {
     statusCode: 200,
@@ -43,7 +43,7 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
 // 4. Update User Controller
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await UserService.updateUserInDB(id, req.body);
+const result = await UserService.updateUserInDB(id as string, req.body);
 
   sendResponse(res, {
     statusCode: 200,
@@ -56,7 +56,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 // 5. Delete User Controller
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await UserService.deleteUserFromDB(id);
+const result = await UserService.deleteUserFromDB(id as string);
 
   sendResponse(res, {
     statusCode: 200,

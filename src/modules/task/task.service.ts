@@ -2,9 +2,9 @@ import prisma from "../../utlis/prisma";
 import { ITask } from "./task.interface";
 
 // 1. Create Task
-const createTaskIntoDB = async (payload: ITask) => {
+const createTaskIntoDB = async (payload: any) => {
   const result = await prisma.task.create({
-    data: payload,
+    data: payload as any, 
   });
   return result;
 };
@@ -19,29 +19,28 @@ const getAllTasksFromDB = async (query: Record<string, unknown>) => {
 
   const conditions: any = [];
 
- 
+  // Search functionality (title or description)
   if (searchTerm) {
     conditions.push({
       OR: [
-        { title: { contains: searchTerm, mode: "insensitive" } },
-        { description: { contains: searchTerm, mode: "insensitive" } },
+        { title: { contains: searchTerm as string, mode: "insensitive" } },
+        { description: { contains: searchTerm as string, mode: "insensitive" } },
       ],
     });
   }
 
-  
+  // Filter by status
   if (status) {
     conditions.push({ status });
   }
 
-
+  // Filter by priority
   if (priority) {
     conditions.push({ priority });
   }
 
   const whereConditions = conditions.length > 0 ? { AND: conditions } : {};
 
-  
   const result = await prisma.task.findMany({
     where: whereConditions,
     skip,
@@ -49,7 +48,6 @@ const getAllTasksFromDB = async (query: Record<string, unknown>) => {
     orderBy: { createdAt: "desc" },
   });
 
-  
   const total = await prisma.task.count({ where: whereConditions });
 
   return {
@@ -75,7 +73,7 @@ const getSingleTaskFromDB = async (id: string) => {
 const updateTaskInDB = async (id: string, payload: Partial<ITask>) => {
   const result = await prisma.task.update({
     where: { id },
-    data: payload,
+    data: payload as any,
   });
   return result;
 };
