@@ -15,11 +15,11 @@ app.use(helmet());
 // 2. CORS Configuration 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000", 
-      "https://your-frontend-domain.vercel.app"
-    ],
+    origin: ["http://localhost:3000", "https://task-mangement-theta.vercel.app", 'https://task-mangement-jvpd0ncty-disentra.vercel.app' ],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
+    maxAge: 86400, 
   })
 );
 

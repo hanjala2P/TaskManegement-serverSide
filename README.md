@@ -1,154 +1,51 @@
-# 🚀 Express TypeScript MongoDB CRUD API
+# 🚀 Enterprise Modular Monolith Task Management API
 
-A clean, scalable, and production-ready RESTful API boilerplate built using **Node.js**, **Express.js**, **TypeScript**, **Prisma ORM**, and **MongoDB**. This project provides a robust foundation for building full-stack applications with standardized error handling and database CRUD operations.
+A robust, secure, and production-ready backend API built with **Node.js, Express, TypeScript, Prisma, and PostgreSQL/MongoDB**. It follows a modular architecture pattern and includes advanced security features, global error handling, Zod validation, and complete deployment readiness for Vercel.
+
+---
+
+## ✨ Features
+
+- **Modular Monolith Architecture:** Clean, scalable, and maintainable folder structure organized by feature modules (`auth`, `user`, `task`, etc.).
+- **Type Safety:** Built completely with **TypeScript**.
+- **Database Management:** Powered by **Prisma ORM** for seamless database operations and migrations.
+- **Robust Validation:** Request body, query, and params validation handled via **Zod**.
+- **Security Best Practices:** 
+  - **Helmet** for securing HTTP headers.
+  - **Rate Limiting** (`express-rate-limit`) to prevent DDoS and Brute-force attacks.
+  - **CORS** configuration supporting credentials and multi-origin access.
+- **Authentication & Authorization:** Secure JWT-based authentication with role-based access control (RBAC) and HttpOnly cookies.
+- **Advanced Task Features:** Pagination, multi-field searching, and filtering by status & priority.
+- **Global Error Handling:** Centralized custom `AppError` and Prisma-aware error handler middleware.
+- **File Uploads:** Integrated with `multer` for handling file attachments.
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Language:** TypeScript
-* **Runtime Environment:** Node.js
-* **Web Framework:** Express.js
-* **Database & ORM:** MongoDB & Prisma ORM
-* **API Testing & Documentation:** Postman
+- **Runtime:** Node.js
+- **Framework:** Express.js (v5)
+- **Language:** TypeScript
+- **Database & ORM:** PostgreSQL / MongoDB via Prisma ORM
+- **Validation:** Zod
+- **Security:** Helmet, Express Rate Limit, bcrypt, JSON Web Token (JWT)
+- **Deployment:** Vercel
 
 ---
-## 🌐 Live Deployment
-* **Live API URL:** [https://mern-backend-q43ep6ez6-disentra.vercel.app/](https://mern-backend-q43ep6ez6-disentra.vercel.app/)
 
 ## 📂 Project Structure
 
 ```text
-mernBackend/
-├── assets/
-│   ├── delete.png
-│   ├── get all users.png
-│   ├── get data by id.png
-│   ├── post.png
-│   └── put-update data.png
-├── node_modules/
-├── prisma/
-│   └── schema.prisma
-├── src/
-│   ├── config/
-│   │   └── index.ts
-│   ├── generated/
-│   │   └── prisma/
-│   ├── interface/
-│   │   └── error.ts
-│   ├── middleware/
-│   │   ├── AppError.ts
-│   │   ├── globalErrorHandler.ts
-│   │   └── notFound.ts
-│   ├── modules/
-│   │   └── user/
-│   │       ├── user.controller.ts
-│   │       ├── user.route.ts
-│   │       └── user.service.ts
-│   ├── routes/
-│   │   └── routes.ts
-│   ├── utlis/
-│   │   ├── catchAsync.ts
-│   │   ├── prisma.ts
-│   │   └── sendResponse.ts
-│   ├── app.ts
-│   └── server.ts
-├── .env
-├── .gitignore
-├── package-lock.json
-├── package.json
-├── prisma.config.ts
-├── README.md
-└── tsconfig.json
-
-```
-
----
-
-## 📌 API Endpoints Overview
-
-**Base URL:** `http://localhost:3000/api/v1`
-
-| HTTP Method | Endpoint | Description |
-| --- | --- | --- |
-| `POST` | `/api/v1/users` | Create a new user record |
-| `GET` | `/api/v1/users` | Retrieve all user records |
-| `GET` | `/api/v1/users/:id` | Retrieve a specific user by ID |
-| `PATCH` | `/api/v1/users/:id` | Update an existing user record |
-| `DELETE` | `/api/v1/users/:id` | Delete a specific user record |
-
----
-
-## 🧪 Postman API Test Results & Screenshots
-
-### 1. Create User (`POST /api/v1/users`)
-* **Description:** Creates a new user entry in the database.
-![Create User Output](./assets/post.png)
-
-### 2. Get All Users (`GET /api/v1/users`)
-* **Description:** Fetches all recorded users.
-![Get All Users Output](./assets/get%20all%20users.png)
-
-### 3. Get Single User (`GET /api/v1/users/:id`)
-* **Description:** Fetches a user record by their unique ObjectId.
-![Get Single User Output](./assets/get%20data%20by%20id.png)
-
-### 4. Update User (`PATCH /api/v1/users/:id`)
-* **Description:** Updates existing user properties (e.g., `name`, `age`).
-![Update User Output](./assets/patch.png)
-
-### 5. Delete User (`DELETE /api/v1/users/:id`)
-* **Description:** Deletes a user record permanently from the database.
-![Delete User Output](./assets/delete.png)
-
----
-
-## ⚙️ Quick Start & Setup Guide
-
-### 1. Repository Setup
-
-```bash
-git clone https://github.com/hanjala2P/-Express-TypeScript-MongoDB-CRUD-API.git
-cd mernBackend
-
-```
-
-### 2. Install Dependencies
-
-```bash
-npm install
-
-```
-
-### 3. Environment Configuration
-
-Create a `.env` file in the root directory and configure your variables:
-
-```env
-PORT=3000
-DATABASE_URL="mongodb+srv://<username>:<password>@cluster.mongodb.net/your-database-name?retryWrites=true&w=majority"
-
-```
-
-### 4. Database & Prisma Setup
-
-Push your Prisma schema to MongoDB and generate the Prisma Client:
-
-```bash
-npx prisma db push
-npx prisma generate
-
-```
-
-### 5. Run Development Server
-
-Start the development server:
-
-```bash
-npm run start:dev
-
-```
-
-> Server running at: `http://localhost:3000`
-
-"# TaskManegement-serverSide" 
+src/
+├── app.ts                  # Express application setup
+├── server.ts               # Server entry point
+├── middleware/             # Global middlewares (Auth, ErrorHandler, ValidateRequest, etc.)
+├── modules/                # Feature-based modules
+│   ├── auth/               # Authentication module (controller, service, routes)
+│   ├── task/               # Task management module
+│   └── user/               # User management module
+├── routes/                 # Central router setup
+└── utlis/                  # Utility functions (Prisma client, CatchAsync, SendResponse, etc.)
+prisma/
+├── schema.prisma           # Prisma database schema
+└── prisma.config.ts        # Prisma configuration
